@@ -97,8 +97,11 @@ const onLoad = async (cfg) => {
     console.log("Debug Event ", e);
   });
 
-  const processMsg = (msg) => {
-    console.log("got msg", msg, process.pid);
+  const processMsg = (room) => (msg) => {
+    const msgs = Array.isArray(msg) ? msg : [msg];
+    msgs.forEach((m) => {
+      Trigger.emitEvent("NextCloudTalkReceive", room, null, m);
+    });
   };
 
   if (!cluster.isMaster || !listen_rooms) {
@@ -115,7 +118,7 @@ const onLoad = async (cfg) => {
       if (listen_rooms.trim() === "*")
         listofrooms.forEach((r) => {
           talk.RoomListenMode(r.token, true);
-          talk.on("Message_" + r.token, processMsg);
+          talk.on("Message_" + r.token, processMsg(r.name));
         });
       else
         listen_rooms.split(",").forEach((rnm) => {
@@ -125,7 +128,7 @@ const onLoad = async (cfg) => {
           );
           if (!the_room) return;
           talk.RoomListenMode(the_room.token, true);
-          talk.on("Message_" + the_room.token, processMsg);
+          talk.on("Message_" + the_room.token, processMsg(the_room.name));
         });
     });
   }
