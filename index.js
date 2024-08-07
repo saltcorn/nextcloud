@@ -80,8 +80,10 @@ const onLoad = async (cfg) => {
     listen_rooms,
     filter_keyword,
   } = cfg;
+  if (!url) return;
+
   talk = new NextcloudTalk({
-    server: url,
+    server: url.replace("https://", "").replace("http://", ""),
     user: system_username,
     pass: system_password,
     port: turn_port,
