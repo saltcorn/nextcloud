@@ -100,7 +100,8 @@ const onLoad = async (cfg) => {
   const processMsg = (room) => (msg) => {
     const msgs = Array.isArray(msg) ? msg : [msg];
     msgs.forEach((m) => {
-      Trigger.emitEvent("NextCloudTalkReceive", room, null, m);
+      if (!filter_keyword || (m.message || "").includes(filter_keyword))
+        Trigger.emitEvent("NextCloudTalkReceive", room, null, m);
     });
   };
 
