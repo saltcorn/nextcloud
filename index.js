@@ -76,8 +76,6 @@ module.exports = {
         },
       ],
       run: async ({ row, user, configuration: { room, text } }) => {
-        console.log("run nextcloud");
-
         const Talk = new NextcloudTalk({
           server: url,
           user: system_username,
@@ -89,7 +87,7 @@ module.exports = {
 
         Talk.on("Ready", (listofrooms) => {
           // show all details about all rooms of the user
-          console.log("nctalk rooms", listofrooms);
+          //console.log("nctalk rooms", listofrooms);
           const the_room = listofrooms.find(
             (r) => r.name === room || r.displayName === room
           );
@@ -104,7 +102,7 @@ module.exports = {
           }
         });
         Talk.on("Error", (e) => {
-          console.log("Error Event ", e);
+          console.error("Error Event ", e);
         });
 
         // Debug
