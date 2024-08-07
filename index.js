@@ -3,6 +3,7 @@ const Form = require("@saltcorn/data/models/form");
 const Trigger = require("@saltcorn/data/models/trigger");
 //const cluster = require("cluster");
 const NextcloudTalk = require("nctalkclient");
+const { interpolate } = require("@saltcorn/data/utils");
 
 const configuration_workflow = () =>
   new Workflow({
@@ -74,7 +75,7 @@ module.exports = {
             "Use interpolations (<code>{{ }}</code>) to access row variables",
         },
       ],
-      run: async ({ row, configuration: { room, text } }) => {
+      run: async ({ row, user, configuration: { room, text } }) => {
         console.log("run nextcloud");
 
         const Talk = new NextcloudTalk({
@@ -97,7 +98,9 @@ module.exports = {
 
             //throw new Error(`Room ${room} not found`);
           } else {
-            Talk.SendMessage(the_room.token, text);
+            let text1 = row ? interpolate(text, row, user) : text;
+
+            Talk.SendMessage(the_room.token, text1);
           }
         });
         Talk.on("Error", (e) => {
