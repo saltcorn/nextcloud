@@ -72,17 +72,18 @@ const onLoad = async (cfg) => {
   if (!cfg) return;
   if (talk) return;
   let {
-    url,
+    host,
     turn_port,
     system_username,
     system_password,
     listen_rooms,
     filter_keyword,
   } = cfg;
-  if (!url) return;
+  if (!host) return;
+  console.log("nc talk cfg", cfg);
 
   talk = new NextcloudTalk({
-    server: url.replace("https://", "").replace("http://", ""),
+    server: host.replace("https://", "").replace("http://", ""),
     user: system_username,
     pass: system_password,
     port: turn_port,
@@ -142,31 +143,13 @@ const onLoad = async (cfg) => {
         });
     });
   }
-
-  /*const { broker_url, subscribe_channels, is_json } = cfg;
-    if (client) await client.end();
-    const broker_url1 = broker_url.includes("://")
-      ? broker_url
-      : `mqtt://${broker_url}`;
-    client = mqtt.connect(broker_url1, { reconnectPeriod: 1000 });
-    client.on("connect", function () {
-      for (channel of subscribe_channels.split(","))
-        client.subscribe(channel.trim());
-    });
-    client.on("message", function (topic, message) {
-      //console.log("MQTT", topic, message);
-      const payload = is_json
-        ? JSON.parse(message.toString())
-        : message.toString();
-      Trigger.emitEvent("MqttReceive", topic, null, payload);
-    });*/
 };
 
 module.exports = {
   sc_plugin_api_version: 1,
   configuration_workflow,
   onLoad,
-  actions: ({ url, turn_port, system_username, system_password } = {}) => ({
+  actions: () => ({
     nextcloud_talk_send: {
       configFields: [
         {
