@@ -6,7 +6,7 @@
   "dependencies": {
     "@saltcorn/markup": "^0.9.1",
     "@saltcorn/data": "^0.9.1",
-    "nctalkclient": "^1.6.0"
+    "@saltcorn/nctalkclient": "1.6.1-beta.0"
   },
   "author": "Tom Nielsen",
   "license": "MIT",

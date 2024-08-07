@@ -2,9 +2,8 @@ const Workflow = require("@saltcorn/data/models/workflow");
 const Form = require("@saltcorn/data/models/form");
 const Trigger = require("@saltcorn/data/models/trigger");
 const cluster = require("cluster");
-const NextcloudTalk = require("nctalkclient");
+const NextcloudTalk = require("@saltcorn/nctalkclient");
 const { interpolate } = require("@saltcorn/data/utils");
-const process = require("process");
 let talk;
 let listofrooms;
 const configuration_workflow = () =>
@@ -89,9 +88,15 @@ const onLoad = async (cfg) => {
     port: turn_port,
     //debug: true,
   });
+
+  let runOnError;
   talk.start(500);
   talk.on("Error", (e) => {
     console.error("Error Event ", e);
+    if (runOnError) {
+      runOnError(e);
+      runOnError = null;
+    }
   });
 
   // Debug
@@ -109,8 +114,10 @@ const onLoad = async (cfg) => {
 
   if (!cluster.isMaster || !listen_rooms) {
     await new Promise((resolve, reject) => {
+      runOnError = reject;
       talk.on("Ready", (listofrooms1) => {
         listofrooms = listofrooms1;
+        runOnError = null;
         resolve();
       });
     });
