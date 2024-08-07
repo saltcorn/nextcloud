@@ -4,16 +4,17 @@ const Trigger = require("@saltcorn/data/models/trigger");
 const cluster = require("cluster");
 const NextcloudTalk = require("nctalkclient");
 const { interpolate } = require("@saltcorn/data/utils");
-
+const process = require("process");
 let talk;
 let listofrooms;
 const configuration_workflow = () =>
   new Workflow({
-    /* onDone: async (cfg) => {
+    onDone: async (cfg) => {
+      if (talk) talk.removeAllListeners();
       await onLoad(cfg);
       return cfg;
     },
-*/ steps: [
+    steps: [
       {
         name: "Nextcloud configuration",
         form: () =>
@@ -50,6 +51,19 @@ const configuration_workflow = () =>
                 type: "String",
                 required: true,
               },
+              {
+                name: "listen_rooms",
+                label: "Listen to rooms",
+                sublabel:
+                  "Separate by commas if more than one, <code>*</code> for all. Will create event NextCloudTalkReceive with room name as channel",
+                type: "String",
+              },
+              {
+                name: "filter_keyword",
+                label: "Filter keyword",
+                sublabel: "Only generate events if message had this keyword,",
+                type: "String",
+              },
             ],
           }),
       },
@@ -57,13 +71,21 @@ const configuration_workflow = () =>
   });
 const onLoad = async (cfg) => {
   if (!cfg) return;
-  let { url, turn_port, system_username, system_password } = cfg;
+  if (talk) return;
+  let {
+    url,
+    turn_port,
+    system_username,
+    system_password,
+    listen_rooms,
+    filter_keyword,
+  } = cfg;
   talk = new NextcloudTalk({
     server: url,
     user: system_username,
     pass: system_password,
     port: turn_port,
-    debug: true,
+    //debug: true,
   });
   talk.start(500);
   talk.on("Error", (e) => {
@@ -74,14 +96,39 @@ const onLoad = async (cfg) => {
   talk.on("Debug", (e) => {
     console.log("Debug Event ", e);
   });
-  await new Promise((resolve, reject) => {
+
+  const processMsg = (msg) => {
+    console.log("got msg", msg, process.pid);
+  };
+
+  if (!cluster.isMaster || !listen_rooms) {
+    await new Promise((resolve, reject) => {
+      talk.on("Ready", (listofrooms1) => {
+        listofrooms = listofrooms1;
+        resolve();
+      });
+    });
+  } else {
     talk.on("Ready", (listofrooms1) => {
       listofrooms = listofrooms1;
-      resolve();
-    });
-  });
 
-  if (!cluster.isMaster) return;
+      if (listen_rooms.trim() === "*")
+        listofrooms.forEach((r) => {
+          talk.RoomListenMode(r.token, true);
+          talk.on("Message_" + r.token, processMsg);
+        });
+      else
+        listen_rooms.split(",").forEach((rnm) => {
+          const room = rnm.trim();
+          const the_room = listofrooms.find(
+            (r) => r.name === room || r.displayName === room
+          );
+          if (!the_room) return;
+          talk.RoomListenMode(the_room.token, true);
+          talk.on("Message_" + the_room.token, processMsg);
+        });
+    });
+  }
 
   /*const { broker_url, subscribe_channels, is_json } = cfg;
     if (client) await client.end();
