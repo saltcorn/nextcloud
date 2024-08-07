@@ -1,0 +1,33 @@
+{
+  "name": "@saltcorn/nextcloud",
+  "version": "0.1.2",
+  "description": "Nextcloud integration",
+  "main": "index.js",
+  "dependencies": {
+    "@saltcorn/markup": "^0.9.1",
+    "@saltcorn/data": "^0.9.1",
+    "nctalkclient": "^1.6.0"
+  },
+  "author": "Tom Nielsen",
+  "license": "MIT",
+  "repository": "github:saltcorn/nextcloud",
+  "publishConfig": {
+    "access": "public"
+  },
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 2020
+    },
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "rules": {
+      "no-unused-vars": "off",
+      "no-case-declarations": "off",
+      "no-empty": "warn",
+      "no-fallthrough": "warn"
+    }
+  }
+}
