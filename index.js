@@ -80,7 +80,6 @@ const onLoad = async (cfg) => {
     filter_keyword,
   } = cfg;
   if (!host) return;
-  console.log("nc talk cfg", cfg);
 
   talk = new NextcloudTalk({
     server: host.replace("https://", "").replace("http://", ""),
