@@ -161,7 +161,7 @@ module.exports = {
             6,
             `Room not found. List of rooms: ${JSON.stringify(listofrooms)}`
           );
-          throw new Error(`Room ${room} not found`);
+          return { error: "Room not found." };
         } else {
           return talk.SendMessage(the_room.token, text);
         }
