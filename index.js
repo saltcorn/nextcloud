@@ -149,7 +149,7 @@ module.exports = {
   sc_plugin_api_version: 1,
   configuration_workflow,
   onLoad,
-  functions: {
+  functions: () => ({
     nextcloud_talk_send: {
       run: async (room, text) => {
         const the_room = listofrooms.find(
@@ -173,7 +173,7 @@ module.exports = {
         { name: "text", type: "String" },
       ],
     },
-  },
+  }),
   actions: () => ({
     nextcloud_talk_send: {
       configFields: [
