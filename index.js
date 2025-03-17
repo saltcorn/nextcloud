@@ -149,6 +149,31 @@ module.exports = {
   sc_plugin_api_version: 1,
   configuration_workflow,
   onLoad,
+  functions: {
+    nextcloud_talk_send: {
+      run: async (room, text) => {
+        const the_room = listofrooms.find(
+          (r) => r.name === room || r.displayName === room || r.token === room
+        );
+        if (!the_room) {
+          //console.error(`Room ${room} not found`);
+          getState().log(
+            6,
+            `Room not found. List of rooms: ${JSON.stringify(listofrooms)}`
+          );
+          throw new Error(`Room ${room} not found`);
+        } else {
+          talk.SendMessage(the_room.token, text);
+        }
+      },
+      isAsync: true,
+      description: "Send a message with Nextcloud talk",
+      arguments: [
+        { name: "room", type: "String" },
+        { name: "text", type: "String" },
+      ],
+    },
+  },
   actions: () => ({
     nextcloud_talk_send: {
       configFields: [
@@ -173,7 +198,10 @@ module.exports = {
         );
         if (!the_room) {
           //console.error(`Room ${room} not found`);
-          getState().log(6, `Room not found. List of rooms: ${JSON.stringify(listofrooms)}`);
+          getState().log(
+            6,
+            `Room not found. List of rooms: ${JSON.stringify(listofrooms)}`
+          );
           throw new Error(`Room ${room} not found`);
         } else {
           let text1 = row ? interpolate(text, row, user) : text;
