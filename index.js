@@ -156,7 +156,7 @@ module.exports = {
           name: "room",
           label: "Room",
           type: "String",
-          sublabel: "Room name or display name",
+          sublabel: "Room name, display name or token",
         },
         {
           name: "text",
@@ -170,7 +170,7 @@ module.exports = {
         getState().log(6, `Nexcloud sending to room ${room}`);
         getState().log(6, `List of rooms: ${JSON.stringify(listofrooms)}`);
         const the_room = listofrooms.find(
-          (r) => r.name === room || r.displayName === room
+          (r) => r.name === room || r.displayName === room || r.token === room
         );
         if (!the_room) {
           //console.error(`Room ${room} not found`);
