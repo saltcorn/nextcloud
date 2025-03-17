@@ -4,6 +4,7 @@ const Trigger = require("@saltcorn/data/models/trigger");
 const cluster = require("cluster");
 const NextcloudTalk = require("@saltcorn/nctalkclient");
 const { interpolate } = require("@saltcorn/data/utils");
+const { getState } = require("@saltcorn/data/db/state");
 let talk;
 let listofrooms;
 const configuration_workflow = () =>
@@ -166,6 +167,8 @@ module.exports = {
         },
       ],
       run: async ({ row, user, configuration: { room, text } }) => {
+        getState().log(6, `Nexcloud sending to room ${room}`);
+        getState().log(6, `List of rooms: ${JSON.stringify(listofrooms)}`);
         const the_room = listofrooms.find(
           (r) => r.name === room || r.displayName === room
         );
