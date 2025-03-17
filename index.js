@@ -168,13 +168,12 @@ module.exports = {
       ],
       run: async ({ row, user, configuration: { room, text } }) => {
         getState().log(6, `Nexcloud sending to room ${room}`);
-        getState().log(6, `List of rooms: ${JSON.stringify(listofrooms)}`);
         const the_room = listofrooms.find(
           (r) => r.name === room || r.displayName === room || r.token === room
         );
         if (!the_room) {
           //console.error(`Room ${room} not found`);
-
+          getState().log(6, `Room not found. List of rooms: ${JSON.stringify(listofrooms)}`);
           throw new Error(`Room ${room} not found`);
         } else {
           let text1 = row ? interpolate(text, row, user) : text;
