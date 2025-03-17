@@ -163,7 +163,7 @@ module.exports = {
           );
           throw new Error(`Room ${room} not found`);
         } else {
-          talk.SendMessage(the_room.token, text);
+          return talk.SendMessage(the_room.token, text);
         }
       },
       isAsync: true,
