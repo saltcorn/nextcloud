@@ -156,12 +156,8 @@ module.exports = {
           (r) => r.name === room || r.displayName === room || r.token === room
         );
         if (!the_room) {
-          //console.error(`Room ${room} not found`);
-          getState().log(
-            6,
-            `Room not found. List of rooms: ${JSON.stringify(listofrooms)}`
-          );
-          return { error: "Room not found." };
+          // room is token for new channel?
+          return talk.SendMessage(room, text);
         } else {
           return talk.SendMessage(the_room.token, text);
         }
@@ -196,15 +192,11 @@ module.exports = {
         const the_room = listofrooms.find(
           (r) => r.name === room || r.displayName === room || r.token === room
         );
+        let text1 = row ? interpolate(text, row, user) : text;
         if (!the_room) {
-          //console.error(`Room ${room} not found`);
-          getState().log(
-            6,
-            `Room not found. List of rooms: ${JSON.stringify(listofrooms)}`
-          );
-          throw new Error(`Room ${room} not found`);
+          // room is token for new channel?
+          talk.SendMessage(room, text1);
         } else {
-          let text1 = row ? interpolate(text, row, user) : text;
 
           talk.SendMessage(the_room.token, text1);
         }
