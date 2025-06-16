@@ -149,7 +149,7 @@ module.exports = {
   sc_plugin_api_version: 1,
   configuration_workflow,
   onLoad,
-  functions: () => ({
+  functions: (cfg) => ({
     nextcloud_talk_send: {
       run: async (room, text) => {
         const the_room = listofrooms.find(
@@ -168,6 +168,14 @@ module.exports = {
         { name: "room", type: "String" },
         { name: "text", type: "String" },
       ],
+    },
+    nextcloud_reconnect: {
+      run: async () => {
+        return await onLoad(cfg);
+      },
+      isAsync: true,
+      description: "Send a message with Nextcloud talk",
+      arguments: [],
     },
   }),
   actions: () => ({
@@ -197,7 +205,6 @@ module.exports = {
           // room is token for new channel?
           talk.SendMessage(room, text1);
         } else {
-
           talk.SendMessage(the_room.token, text1);
         }
       },
