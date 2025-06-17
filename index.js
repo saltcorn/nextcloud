@@ -177,6 +177,14 @@ module.exports = {
       description: "Send a message with Nextcloud talk",
       arguments: [],
     },
+    nextcloud_get_rooms: {
+      run: async () => {
+        return listofrooms;
+      },
+      isAsync: true,
+      description: "Send a message with Nextcloud talk",
+      arguments: [],
+    },
   }),
   actions: () => ({
     nextcloud_talk_send: {
