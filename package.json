@@ -1,6 +1,6 @@
 {
   "name": "@saltcorn/nextcloud",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Nextcloud integration",
   "main": "index.js",
   "dependencies": {
