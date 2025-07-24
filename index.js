@@ -69,9 +69,9 @@ const configuration_workflow = () =>
       },
     ],
   });
-const onLoad = async (cfg) => {
+const onLoad = async (cfg, do_reconnect) => {
   if (!cfg) return;
-  if (talk) return;
+  if (talk && !do_reconnect) return;
   let {
     host,
     turn_port,
@@ -171,7 +171,7 @@ module.exports = {
     },
     nextcloud_reconnect: {
       run: async () => {
-        return await onLoad(cfg);
+        return await onLoad(cfg, true);
       },
       isAsync: true,
       description: "Send a message with Nextcloud talk",
