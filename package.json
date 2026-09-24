@@ -1,13 +1,12 @@
 {
   "name": "@saltcorn/nextcloud",
-  "version": "0.2.6",
-  "description": "Nextcloud integration",
+  "version": "0.3.0",
+  "description": "Nextcloud Talk integration: reliable sending with fallback, direct messages, threads, directory search, chat monitoring, agent skill",
   "main": "index.js",
-  "dependencies": {
-    "@saltcorn/markup": "^0.9.1",
-    "@saltcorn/data": "^0.9.1",
-    "@saltcorn/nctalkclient": "1.6.1-beta.0"
+  "scripts": {
+    "test": "jest tests --runInBand"
   },
+  "dependencies": {},
   "author": "Tom Nielsen",
   "license": "MIT",
   "repository": "github:saltcorn/nextcloud",
